@@ -2,6 +2,7 @@ import { Worker } from "bullmq";
 import { redisConnection } from "../config/redis";
 import { prisma } from "../db/prisma";
 import { logger } from "../utils/logger";
+import { env } from "../config/env";
 import { queueNameFor } from "./queues";
 import { sendViaEthereal } from "../smtp/ethereal";
 
@@ -46,7 +47,7 @@ function startWorkerForSender(senderId: string, hourlyLimit: number) {
     },
     {
       connection: redisConnection,
-      concurrency: 5, // TODO: make configurable per campaign if needed
+      concurrency: env.workerConcurrency,
       limiter: { max: hourlyLimit, duration: 60 * 60 * 1000 },
     }
   );
@@ -70,7 +71,9 @@ async function main() {
     startWorkerForSender(sender.id, latestCampaign?.hourlyLimit ?? 200);
   }
 
-  logger.info(`worker process up, watching ${senders.length} sender queue(s)`);
+  logger.info(
+    `worker process up, watching ${senders.length} sender queue(s), concurrency=${env.workerConcurrency}`
+  );
 }
 
 main().catch((err) => {

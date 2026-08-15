@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { api } from "@/lib/api";
 import type { EmailRecord } from "@/types";
 
-export function useScheduledEmails() {
+export function useSentEmails() {
   const { data: session, status } = useSession();
   const [emails, setEmails] = useState<EmailRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ export function useScheduledEmails() {
     if (!session?.idToken) return;
     setLoading(true);
     try {
-      setEmails(await api.getScheduledEmails(session.idToken));
+      setEmails(await api.getSentEmails(session.idToken));
     } finally {
       setLoading(false);
     }

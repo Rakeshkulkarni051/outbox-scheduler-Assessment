@@ -4,6 +4,7 @@ import { env } from "./config/env";
 import { logger } from "./utils/logger";
 import { scheduleRouter } from "./modules/schedule/schedule.routes";
 import { emailsRouter } from "./modules/emails/emails.routes";
+import { sendersRouter } from "./modules/senders/senders.routes";
 import { reconcilePendingEmails } from "./queue/reconcile";
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use("/api", scheduleRouter);
 app.use("/api", emailsRouter);
+app.use("/api", sendersRouter);
 
 async function main() {
   await reconcilePendingEmails();

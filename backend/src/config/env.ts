@@ -18,4 +18,6 @@ export const env = {
   },
   defaultHourlyLimit: Number(process.env.DEFAULT_HOURLY_LIMIT ?? 200),
   minDelayMs: Number(process.env.MIN_DELAY_MS ?? 2000),
+  workerConcurrency: Number(process.env.WORKER_CONCURRENCY ?? 5),
+  googleClientId: process.env.GOOGLE_CLIENT_ID ?? "",
 };

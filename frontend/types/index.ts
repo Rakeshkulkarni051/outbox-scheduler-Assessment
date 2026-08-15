@@ -30,3 +30,14 @@ export interface EmailRecord {
   status: EmailStatus;
   campaign: Campaign;
 }
+
+// Mirrors backend/src/modules/schedule/schedule.dto.ts (createCampaignSchema)
+export interface ScheduleCampaignInput {
+  subject: string;
+  body: string;
+  startTime: string; // ISO 8601
+  delayMs: number;
+  hourlyLimit: number;
+  senderId: string;
+  recipients: string[];
+}
