@@ -271,10 +271,19 @@ function EmailRow({
   const router = useRouter();
 
   const recipient = email.recipient || "Unknown recipient";
-  const subject = email.subject || "No subject";
-  const body = email.body || "";
+  const subject = email.campaign?.subject || "No subject";
+const body = email.campaign?.body || "";
 
-  const preview = body.replace(/\s+/g, " ").trim();
+  const preview = body
+  .replace(/<[^>]*>/g, " ")
+  .replace(/&nbsp;/gi, " ")
+  .replace(/&amp;/gi, "&")
+  .replace(/&lt;/gi, "<")
+  .replace(/&gt;/gi, ">")
+  .replace(/&quot;/gi, '"')
+  .replace(/&#39;/gi, "'")
+  .replace(/\s+/g, " ")
+  .trim();
 
   const dateValue =
     tab === "scheduled"

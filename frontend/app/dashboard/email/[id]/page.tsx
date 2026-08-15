@@ -98,11 +98,11 @@ const tab = searchParams.get("tab");
   const recipient =
     (email as any).recipient || "Unknown recipient";
 
-  const subject =
-    (email as any).subject || "No subject";
+ const subject =
+  (email as any).campaign?.subject || "No subject";
 
-  const body =
-    (email as any).body || "";
+const body =
+  (email as any).campaign?.body || "";
 
   const senderName =
     (email as any).sender?.name ||
@@ -277,37 +277,13 @@ function EmailHeader({
 ================================================================ */
 
 function renderEmailBody(body: string) {
-  /*
-   * If your backend eventually stores actual HTML email bodies,
-   * this can be changed to a sanitized HTML renderer.
-   *
-   * For the current assignment, the backend stores the body as
-   * the email body string, so preserving line breaks is safest.
-   */
-
-  const lines = body.split(/\r?\n/);
-
   return (
-    <div className="text-[12px] leading-[1.8] text-[#34393B]">
-
-      {lines.map((line, index) => {
-        if (!line.trim()) {
-          return (
-            <div
-              key={index}
-              className="h-3"
-            />
-          );
-        }
-
-        return (
-          <p key={index}>
-            {line}
-          </p>
-        );
-      })}
-
-    </div>
+    <div
+      className="text-[12px] leading-[1.8] text-[#34393B]"
+      dangerouslySetInnerHTML={{
+        __html: body,
+      }}
+    />
   );
 }
 
