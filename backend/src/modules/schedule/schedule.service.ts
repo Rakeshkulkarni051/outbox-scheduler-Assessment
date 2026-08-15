@@ -28,7 +28,11 @@ export async function createCampaign(input: CreateCampaignInput) {
   const queue = getSenderQueue(input.senderId);
   for (const email of campaign.emails) {
     const delay = Math.max(0, email.scheduledTime.getTime() - Date.now());
-    await queue.add("send-email", { emailId: email.id }, { jobId: jobIdForEmail(email.id), delay });
+    await queue.add(
+      "send-email",
+      { emailId: email.id, subject: campaign.subject, body: campaign.body },
+      { jobId: jobIdForEmail(email.id), delay }
+    );
   }
 
   return campaign;

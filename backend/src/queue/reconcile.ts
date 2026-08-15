@@ -12,7 +12,7 @@ import { logger } from "../utils/logger";
  * of those jobs were actually already queued.
  */
 export async function reconcilePendingEmails() {
-  const pending = await prisma.email.findMany({ where: { status: "pending" } });
+  const pending = await prisma.email.findMany({ where: { status: "pending" }, include: { campaign: true } });
 
   for (const email of pending) {
     const queue = getSenderQueue(email.senderId);
@@ -20,7 +20,7 @@ export async function reconcilePendingEmails() {
 
     await queue.add(
       "send-email",
-      { emailId: email.id },
+      { emailId: email.id, subject: email.campaign.subject, body: email.campaign.body },
       { jobId: jobIdForEmail(email.id), delay }
     );
   }
