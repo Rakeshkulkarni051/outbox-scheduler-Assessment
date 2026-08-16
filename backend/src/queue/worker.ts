@@ -1,10 +1,22 @@
 import { Worker } from "bullmq";
+import express from "express";
 import { redisConnection } from "../config/redis";
 import { prisma } from "../db/prisma";
 import { logger } from "../utils/logger";
 import { env } from "../config/env";
 import { queueNameFor } from "./queues";
 import { sendViaEthereal } from "../smtp/ethereal";
+
+// Render's free tier only offers "Web Service" (needs a listening port for
+// health checks), not "Background Worker" (paid-only). This tiny server
+// exists purely so the worker process can be deployed as a free Web
+// Service — it does nothing but answer /health. Pair with an external
+// uptime pinger (e.g. UptimeRobot, free) hitting this endpoint every few
+// minutes so Render doesn't spin the service down from inactivity, which
+// would otherwise delay on-time sends.
+const healthApp = express();
+healthApp.get("/health", (_req, res) => res.json({ ok: true, role: "worker" }));
+healthApp.listen(env.port, () => logger.info(`worker health endpoint listening on :${env.port}`));
 
 // Redis-backed "next allowed send slot" per sender, so the minimum delay
 // between sends is enforced correctly even across CONCURRENT jobs (worker
@@ -38,6 +50,7 @@ async function waitForMinDelay(senderId: string, minDelayMs: number) {
     await new Promise((resolve) => setTimeout(resolve, waitMs));
   }
 }
+
 function startWorkerForSender(senderId: string, hourlyLimit: number, minDelayMs: number) {
   const worker = new Worker(
     queueNameFor(senderId),
