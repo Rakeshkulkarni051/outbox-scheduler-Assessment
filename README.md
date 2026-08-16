@@ -7,15 +7,8 @@ time using **BullMQ delayed jobs** (no cron, by design), survives server
 restarts without losing or duplicating work, and exposes a dashboard to
 create, monitor, and audit scheduled and sent campaigns.
 
-**Live deployment:**
-- Frontend (dashboard): https://outbox-scheduler-assessment-fronten.vercel.app
-- Backend API: https://outbox-scheduler-assessment-2.onrender.com
-- Worker service: https://outbox-scheduler-assessment-worker-serv.onrender.com
-
-> Note: the backend and worker run on Render's free tier, which spins down
-> after ~15 minutes of inactivity. The first request after idle time may
-> take 30–60 seconds to respond while the service wakes up — this is a
-> hosting-tier characteristic, not an application defect.
+**Live deployment:** available on request — see [Deployment](#deployment)
+for the hosting architecture and platform choices.
 
 ---
 
@@ -615,6 +608,19 @@ steps would be:
   intentionally minimal — JSON-line console output — and would be the
   first thing swapped for something like Pino with a real log sink in a
   production deployment).
+
+---
+
+## Live Deployment
+
+- Frontend (dashboard): https://outbox-scheduler-assessment-fronten.vercel.app
+- Backend API: https://outbox-scheduler-assessment-2.onrender.com
+- Worker service: https://outbox-scheduler-assessment-worker-serv.onrender.com
+
+> Note: the backend and worker run on Render's free tier, which spins down
+> after ~15 minutes of inactivity. The first request after idle time may
+> take 30–60 seconds to respond while the service wakes up — this is a
+> hosting-tier characteristic, not an application defect.
 
 ---
 
