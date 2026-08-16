@@ -10,6 +10,7 @@ function required(key: string, fallback?: string): string {
 
 export const env = {
   port: Number(process.env.PORT ?? 4000),
+  workerPort: Number(process.env.WORKER_PORT ?? process.env.PORT ?? 4001),
   databaseUrl: required("DATABASE_URL"),
   redisUrl: required("REDIS_URL", "redis://localhost:6379"),
   ethereal: {

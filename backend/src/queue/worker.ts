@@ -16,7 +16,7 @@ import { sendViaEthereal } from "../smtp/ethereal";
 // would otherwise delay on-time sends.
 const healthApp = express();
 healthApp.get("/health", (_req, res) => res.json({ ok: true, role: "worker" }));
-healthApp.listen(env.port, () => logger.info(`worker health endpoint listening on :${env.port}`));
+healthApp.listen(env.workerPort, () => logger.info(`worker health endpoint listening on :${env.port}`));
 
 // Redis-backed "next allowed send slot" per sender, so the minimum delay
 // between sends is enforced correctly even across CONCURRENT jobs (worker
